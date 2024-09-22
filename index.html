@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <form id="myForm">
+        <label for="name">Имя:</label>
+        <input type="text" id="name" name="name">
+        <span class="error-message" id="nameError"></span>
+        <br><br>
+        <label for="birthYear">Год рождения:</label>
+        <input type="text" id="birthYear" name="birthYear" maxlength="4">
+        <span class="error-message" id="birthYearError"></span>
+        <br><br>
+        <button type="submit">Отправить</button>
+    </form>
+    <p class="success-message" id="successMessage"></p>
+
+    <script>
+        document.getElementById('myForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Предотвращаем отправку формы по умолчанию
+
+            // Получаем значения полей
+            const name = document.getElementById('name').value.trim();
+            const birthYear = document.getElementById('birthYear').value.trim();
+
+            // Элементы для вывода ошибок
+            const nameError = document.getElementById('nameError');
+            const birthYearError = document.getElementById('birthYearError');
+            const successMessage = document.getElementById('successMessage');
+
+            // Очищаем предыдущие ошибки
+            nameError.textContent = '';
+            birthYearError.textContent = '';
+            successMessage.textContent = '';
+
+            let isValid = true;
+
+            // Валидация поля "Имя"
+            if (name === '') {
+                nameError.textContent = 'Имя не может быть пустым';
+                document.getElementById('name').classList.add('error');
+                isValid = false;
+            } else if (name.length < 2) {
+                nameError.textContent = 'Имя должно содержать не менее 2 символов';
+                document.getElementById('name').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('name').classList.remove('error');
+            }
+
+            // Валидация поля "Год рождения"
+            const currentYear = new Date().getFullYear();
+            const age = currentYear - birthYear;
+
+            if (birthYear === '') {
+                birthYearError.textContent = 'Год рождения не может быть пустым';
+                document.getElementById('birthYear').classList.add('error');
+                isValid = false;
+            } else if (birthYear.length !== 4 || isNaN(birthYear)) {
+                birthYearError.textContent = 'Год рождения должен содержать ровно 4 цифры';
+                document.getElementById('birthYear').classList.add('error');
+                isValid = false;
+            } else if (age < 18) {
+                birthYearError.textContent = 'Вам должно быть не менее 18 лет';
+                document.getElementById('birthYear').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('birthYear').classList.remove('error');
+            }
+
+            // Если все поля валидны, выводим сообщение об успешной отправке
+            if (isValid) {
+                successMessage.textContent = 'Форма успешно отправлена!';
+            }
+        });
+    </script>
+</body>
+</html>
